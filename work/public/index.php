@@ -2,12 +2,12 @@
 
 require_once(__DIR__ . '/../app/config.php');
 
-createToken();
+Token::create();
 
 $pdo = getPdoInstance();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  validateToken();
+  Token::validate();
   $action = filter_input(INPUT_GET, 'action');
 
   switch ($action) {
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       toggleTodo($pdo);
       break;
     case 'delete':
-      deleteToDo($pdo);
+      deleteTodo($pdo);
       break;
     default:
       exit;
@@ -62,8 +62,8 @@ $todos = getTodos($pdo);
 
         <form action="?action=delete" method="post" class="delete-form">
           <span class="delete">x</span>
-          <input type="hidden" name="id" value="<?= h($todo->id); ?>">
-          <input type="hidden" name="token" value="<?= h($_SESSION['token']); ?>">
+          <input type="hidden" name="id" value="<?= Utils::h($todo->id); ?>">
+          <input type="hidden" name="token" value="<?= Utils::h($_SESSION['token']); ?>">
         </form>
       </li>
       <?php endforeach; ?>
